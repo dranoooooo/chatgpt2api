@@ -47,6 +47,7 @@ func (s *ImageService) Save(ctx context.Context, data []byte, baseURL string) (S
 	digest := md5.Sum(data)
 	now := time.Now()
 	rel := filepath.ToSlash(filepath.Join(now.Format("2006"), now.Format("01"), now.Format("02"), strconvTime(now)+"_"+hex.EncodeToString(digest[:])+".png"))
+	s.notifyTelegram(data, filepath.Base(rel))
 	settings := s.config.Image.Storage
 	local, webdav := settings.Mode != "webdav", settings.Enabled && (settings.Mode == "webdav" || settings.Mode == "both")
 	remote := ""
